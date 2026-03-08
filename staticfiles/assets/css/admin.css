@@ -1,0 +1,59 @@
+
+body {
+    background: #f4f6f9;
+}
+
+.sidebar {
+    height: 100vh;
+    background: #111827;
+    color: white;
+}
+
+.sidebar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 12px 20px;
+    display: block;
+    border-radius: 8px;
+    margin: 5px 10px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+}
+
+.card-stat {
+    border: none;
+    border-radius: 15px;
+    color: white;
+}
+
+.card-stat i {
+    font-size: 28px;
+}
+
+.topbar {
+    background: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table thead {
+    background: #f1f5f9;
+}
+
+@media(max-width: 991px){
+    .sidebar {
+        position: fixed;
+        z-index: 1000;
+        width: 250px;
+        left: -250px;
+        transition: 0.3s;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+}

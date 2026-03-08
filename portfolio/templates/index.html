@@ -1,0 +1,544 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{{ content.site_name }}</title>
+  <meta name="description" content="">
+
+  <link href="{% static 'assets/img/logo.png' %}" rel="icon">
+  <link href="{% static 'assets/img/logo.png' %}" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Ubuntu:wght@300;400;500;700&family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+<header id="header" class="header dark-background d-flex flex-column justify-content-center">
+  <i class="header-toggle d-xl-none bi bi-list"></i>
+
+  <div class="header-container d-flex flex-column align-items-start">
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="social-links text-center">
+      {% for social in header_social_links %}
+        <a href="{{ social.url }}" target="_blank" rel="noopener" class="{{ social.platform|lower }}"><i class="{{ social.icon_class }}"></i></a>
+      {% empty %}
+        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      {% endfor %}
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <section id="hero" class="hero section">
+    <div class="background-elements">
+      <div class="bg-circle circle-1"></div>
+      <div class="bg-circle circle-2"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+            <div class="hero-text">
+              <h1>{{ content.site_name }}</h1>
+              <h2>{{ content.hero_name }}</h2>
+              <p class="lead">I'm a <span class="typed" data-typed-items="{{ content.hero_roles }}"></span></p>
+              <p class="description">{{ content.hero_description }}</p>
+
+              <div class="hero-actions">
+                <a href="{{ content.hero_primary_button_link }}" class="btn btn-primary">{{ content.hero_primary_button_label }}</a>
+                <a href="{{ content.hero_secondary_button_link }}" class="btn btn-outline">{{ content.hero_secondary_button_label }}</a>
+              </div>
+
+              <div class="social-links">
+                {% for social in hero_social_links %}
+                  <a href="{{ social.url }}" target="_blank" rel="noopener"><i class="{{ social.icon_class }}"></i></a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="hero-visual">
+              <div class="profile-container">
+                <div class="profile-background"></div>
+                {% if content.hero_image %}
+                  <img src="{{ content.hero_image.url }}" alt="{{ content.hero_name }}" class="profile-image">
+                {% else %}
+                  <img src="{% static 'assets/img/logo.jpeg' %}" alt="{{ content.hero_name }}" class="profile-image">
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-5" data-aos="zoom-in" data-aos-delay="200">
+          <div class="profile-card">
+            <div class="profile-header">
+              <div class="profile-image">
+                {% if content.about_image %}
+                  <img src="{{ content.about_image.url }}" alt="Profile" class="img-fluid">
+                {% else %}
+                  <img src="{% static 'assets/img/mypicture.jpeg' %}" alt="Profile" class="img-fluid">
+                {% endif %}
+              </div>
+              <div class="profile-badge">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+            </div>
+
+            <div class="profile-content">
+              <h3>{{ content.about_name }}</h3>
+              <p class="profession">{{ content.about_profession }}</p>
+
+              <div class="contact-links">
+                <a href="mailto:{{ content.about_email }}" class="contact-item">
+                  <i class="bi bi-envelope"></i>{{ content.about_email }}
+                </a>
+                <a href="tel:{{ content.about_phone }}" class="contact-item">
+                  <i class="bi bi-telephone"></i>{{ content.about_phone }}
+                </a>
+                <a href="#" class="contact-item">
+                  <i class="bi bi-geo-alt"></i>{{ content.about_location }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7" data-aos="fade-left" data-aos-delay="300">
+          <div class="about-content">
+            <div class="section-header">
+              <span class="badge-text">{{ content.about_badge }}</span>
+              <h2>{{ content.about_title }}</h2>
+            </div>
+
+            <div class="description">
+              <p>{{ content.about_description_1 }}</p>
+              <p>{{ content.about_description_2 }}</p>
+            </div>
+
+            <div class="stats-grid">
+              {% for stat in about_stats %}
+                <div class="stat-item">
+                  <div class="stat-number">{{ stat.value }}</div>
+                  <div class="stat-label">{{ stat.label }}</div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="details-grid">
+              {% for detail in about_details %}
+                <div class="detail-row">
+                  <div class="detail-item">
+                    <span class="detail-label">{{ detail.label }}</span>
+                    <span class="detail-value">{{ detail.value }}</span>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="cta-section">
+              <a href="{{ content.about_resume_link }}" class="btn btn-primary">
+                <i class="bi bi-download"></i>{{ content.about_resume_label }}
+              </a>
+              <a href="{{ content.about_talk_link }}" class="btn btn-outline">
+                <i class="bi bi-chat-dots"></i>{{ content.about_talk_label }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stats" class="stats section light-background">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="stats-wrapper">
+            {% for stat in counter_stats %}
+              <div class="stats-item" data-aos="zoom-in">
+                <div class="icon-wrapper"><i class="{{ stat.icon_class }}"></i></div>
+                <span data-purecounter-start="0" data-purecounter-end="{{ stat.value }}" data-purecounter-duration="1" class="purecounter"></span>
+                <p>{{ stat.label }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="skills section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Skills</h2>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        {% for category in skill_categories %}
+          <div class="col-lg-6">
+            <div class="skills-category" data-aos="fade-up">
+              <h3>{{ category.title }}</h3>
+              <div class="skills-animation">
+                {% for skill in category.skills.all %}
+                  {% if skill.is_active %}
+                    <div class="skill-item">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h4>{{ skill.title }}</h4>
+                        <span class="skill-percentage">{{ skill.percentage }}%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ skill.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="skill-tooltip">{{ skill.tooltip }}</div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="resume" class="resume section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>{{ content.resume_title }}</h2>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4">
+        <div class="col-lg-4">
+          <div class="resume-side" data-aos="fade-right" data-aos-delay="100">
+            <div class="profile-img mb-4">
+              {% if content.resume_profile_image %}
+                <img src="{{ content.resume_profile_image.url }}" alt="Profile" class="img-fluid rounded">
+              {% else %}
+                <img src="{% static 'assets/img/mypicture.jpeg' %}" alt="Profile" class="img-fluid rounded">
+              {% endif %}
+            </div>
+
+            <h3>Professional Summary</h3>
+            <p>{{ content.resume_summary }}</p>
+
+            <h3 class="mt-4">Contact Information</h3>
+            <ul class="contact-info list-unstyled">
+              <li><i class="bi bi-geo-alt"></i> {{ content.resume_location }}</li>
+              <li><i class="bi bi-envelope"></i> {{ content.resume_email }}</li>
+              <li><i class="bi bi-phone"></i> {{ content.resume_phone }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-8 ps-4 ps-lg-5">
+          <div class="resume-section" data-aos="fade-up">
+            <h3><i class="bi bi-briefcase me-2"></i>Professional Experience</h3>
+            {% for exp in resume_experiences %}
+              <div class="resume-item">
+                <h4>{{ exp.title }}</h4>
+                <h5>{{ exp.period }}</h5>
+                <p class="company"><i class="bi bi-building"></i> {{ exp.company }}</p>
+                <ul>
+                  {% for point in exp.points.all %}
+                    <li>{{ point.text }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="resume-section" data-aos="fade-up" data-aos-delay="100">
+            <h3><i class="bi bi-mortarboard me-2"></i>Education</h3>
+            {% for edu in resume_educations %}
+              <div class="resume-item">
+                <h4>{{ edu.title }}</h4>
+                <h5>{{ edu.period }}</h5>
+                <p class="company"><i class="bi bi-building"></i> {{ edu.school }}</p>
+                <p>{{ edu.summary }}</p>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="resume-section" data-aos="fade-up" data-aos-delay="200">
+            <h3><i class="bi bi-award me-2"></i>Certifications</h3>
+            {% for cert in resume_certifications %}
+              <div class="resume-item">
+                <h4>{{ cert.title }}</h4>
+                <h5>{{ cert.year }}</h5>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio" class="portfolio section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>{{ content.portfolio_title }}</h2>
+      <p>{{ content.portfolio_intro }}</p>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+        <div class="row">
+          <div class="col-lg-3 filter-sidebar">
+            <div class="filters-wrapper" data-aos="fade-right" data-aos-delay="150">
+              <ul class="portfolio-filters isotope-filters">
+                <li data-filter="*" class="filter-active">All Projects</li>
+                {% for category in portfolio_categories %}
+                  <li data-filter=".filter-{{ category.slug }}">{{ category.name }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-9">
+            <div class="row gy-4 portfolio-container isotope-container" data-aos="fade-up" data-aos-delay="200">
+              {% for item in portfolio_items %}
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item {% if item.category %}filter-{{ item.category.slug }}{% endif %}">
+                  <div class="portfolio-wrap">
+                    <img src="{{ item.image.url }}" class="img-fluid" alt="{{ item.title }}" loading="lazy">
+                    <div class="portfolio-info">
+                      <div class="content">
+                        <span class="category">{% if item.category %}{{ item.category.name }}{% else %}Project{% endif %}</span>
+                        <h4>{{ item.title }}</h4>
+                        <div class="portfolio-links">
+                          <a href="{{ item.image.url }}" class="glightbox" title="{{ item.title }}"><i class="bi bi-plus-lg"></i></a>
+                          {% if item.details_url %}
+                            <a href="{{ item.details_url }}" title="More Details"><i class="bi bi-arrow-right"></i></a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="services section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>{{ content.services_title }}</h2>
+      <p>{{ content.services_intro }}</p>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="service-header">
+        <div class="row align-items-center">
+          <div class="col-lg-8 col-md-12">
+            <div class="service-intro">
+              <h2 class="service-heading">
+                <div>{{ content.services_heading_line_1 }}</div>
+                <div><span>{{ content.services_heading_line_2 }}</span></div>
+              </h2>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12">
+            <div class="service-summary">
+              <p>{{ content.services_summary }}</p>
+              <a href="{{ content.services_button_link }}" class="service-btn">
+                {{ content.services_button_label }}
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        {% for service in service_items %}
+          <div class="col-lg-4 col-md-6" data-aos="fade-up">
+            <div class="service-card position-relative z-1">
+              <div class="service-icon">
+                <i class="{{ service.icon_class }}"></i>
+              </div>
+              <a href="{{ service.link }}" class="card-action d-flex align-items-center justify-content-center rounded-circle">
+                <i class="bi bi-arrow-up-right"></i>
+              </a>
+              <h3>
+                <a href="{{ service.link }}">
+                  {{ service.title }} {% if service.highlighted_word %}<span>{{ service.highlighted_word }}</span>{% endif %}
+                </a>
+              </h3>
+              <p>{{ service.description }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials" class="testimonials section light-background">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>{{ content.testimonials_title }}</h2>
+      <p>{{ content.testimonials_intro }}</p>
+    </div>
+
+    <div class="container">
+      <div class="testimonial-masonry">
+        {% for testimonial in testimonials %}
+          <div class="testimonial-item {% if testimonial.highlight %}highlight{% endif %}" data-aos="fade-up">
+            <div class="testimonial-content">
+              <div class="quote-pattern"><i class="bi bi-quote"></i></div>
+              <p>{{ testimonial.quote }}</p>
+              <div class="client-info">
+                <div class="client-image">
+                  {% if testimonial.image %}
+                    <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}">
+                  {% else %}
+                    <img src="{% static 'assets/img/person/person-m-7.webp' %}" alt="{{ testimonial.name }}">
+                  {% endif %}
+                </div>
+                <div class="client-details">
+                  <h3>{{ testimonial.name }}</h3>
+                  <span class="position">{{ testimonial.position }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>{{ content.contact_title }}</h2>
+      <p>{{ content.contact_section_intro }}</p>
+    </div>
+
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-5">
+          <div class="info-box">
+            <h3>Contact Info</h3>
+            <p>{{ content.contact_intro }}</p>
+
+            <div class="info-item">
+              <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+              <div class="content">
+                <h4>Our Location</h4>
+                <p>{{ content.contact_location }}</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon-box"><i class="bi bi-telephone"></i></div>
+              <div class="content">
+                <h4>Phone Number</h4>
+                <p>{{ content.contact_phone }}</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon-box"><i class="bi bi-envelope"></i></div>
+              <div class="content">
+                <h4>Email Address</h4>
+                <p>{{ content.contact_email }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="contact-form">
+            <h3>{{ content.contact_form_title }}</h3>
+            <p>{{ content.contact_form_intro }}</p>
+
+            <form action="{% url 'index' %}#contact" method="post" class="php-email-form">
+              {% csrf_token %}
+              <div class="row gy-4">
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="col-12">
+                  <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                </div>
+                <div class="col-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                </div>
+                <div class="col-12 text-center">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                  {% endif %}
+                  <button type="submit" class="btn">Send Message</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="footer position-relative">
+  <div class="container">
+    <div class="copyright text-center ">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">{{ content.footer_brand }}</strong> <span>{{ content.footer_text }}</span></p>
+    </div>
+    <div class="credits">
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> | <a href="https://bootstrapmade.com/tools/">DevTools</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<div id="preloader"></div>
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/typed.js/typed.umd.js' %}"></script>
+<script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+<script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
+<script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

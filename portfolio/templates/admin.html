@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - {{ content_form.instance.site_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/admin.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Frontend & Messages Dashboard</h4>
+        <div class="d-flex gap-2">
+            <a href="{% url 'admin:index' %}" class="btn btn-outline-dark btn-sm">Django Admin</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Total Messages</div>
+                        <h3 class="mb-0">{{ message_count }}</h3>
+                    </div>
+                    <i class="bi bi-chat-left-text fs-3"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Messages Today</div>
+                        <h3 class="mb-0">{{ today_message_count }}</h3>
+                    </div>
+                    <i class="bi bi-calendar-check fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">Section Menu (Django Admin)</h6>
+                </div>
+                <div class="card-body d-grid gap-2">
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/sitecontent/">Site Content</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/sociallink/">Social Links</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/aboutstat/">About Stats</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/aboutdetail/">About Details</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/counterstat/">Counter Stats</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/skillcategory/">Skill Categories</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/skill/">Skills</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumeexperience/">Resume Experience</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumeeducation/">Resume Education</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumecertification/">Resume Certifications</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/portfoliocategory/">Portfolio Categories</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/portfolioitem/">Portfolio Items</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/serviceitem/">Services</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/testimonial/">Testimonials</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">Quick Edit: Site Content</h6>
+                </div>
+                <div class="card-body" style="max-height: 70vh; overflow-y: auto;">
+                    <form method="post" action="{% url 'portfolio_admin' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="save_content">
+
+                        {% for field in content_form %}
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="text-muted d-block">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Sent Messages</h6>
+                    <span class="badge text-bg-dark">{{ message_count }}</span>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for msg in contact_messages %}
+                            <tr>
+                                <td>
+                                    {{ msg.name }}
+                                    <div class="small text-muted">{{ msg.email }}</div>
+                                </td>
+                                <td>
+                                    <strong>{{ msg.subject }}</strong>
+                                    <div class="small text-muted">{{ msg.message|truncatechars:50 }}</div>
+                                </td>
+                                <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+                                <td class="d-flex gap-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#messageModal{{ msg.id }}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <form method="post" action="{% url 'delete_message' msg.id %}" onsubmit="return confirm('Delete this message?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No messages yet.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for msg in contact_messages %}
+<div class="modal fade" id="messageModal{{ msg.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Message from {{ msg.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2"><strong>Name:</strong> {{ msg.name }}</div>
+                <div class="mb-2"><strong>Email:</strong> {{ msg.email }}</div>
+                <div class="mb-2"><strong>Subject:</strong> {{ msg.subject }}</div>
+                <div class="mb-2"><strong>Date:</strong> {{ msg.created_at|date:"M d, Y H:i" }}</div>
+                <hr>
+                <p class="mb-0" style="white-space: pre-wrap;">{{ msg.message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
