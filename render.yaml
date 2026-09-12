@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: kiztech-portfolio
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn myproject.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "false"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"

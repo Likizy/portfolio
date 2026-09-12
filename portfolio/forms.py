@@ -3,6 +3,13 @@ from django import forms
 from .models import SiteContent
 
 
+class ContactMessageForm(forms.Form):
+    name = forms.CharField(max_length=200)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=200)
+    message = forms.CharField()
+
+
 class SiteContentForm(forms.ModelForm):
     class Meta:
         model = SiteContent

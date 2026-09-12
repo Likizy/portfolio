@@ -14,7 +14,7 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
-    "kiztech.onrender.com,kiztech.com,www.kiztech.com,localhost,127.0.0.1",
+    "kiztech.onrender.com,kiztech.com,www.kiztech.com,localhost,127.0.0.1,testserver",
 ).split(",")
 
 INSTALLED_APPS = [
@@ -95,12 +95,12 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'portfolio' / 'static/',
-]
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 

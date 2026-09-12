@@ -2,188 +2,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - {{ content_form.instance.site_name }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/admin.css' %}" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · {{ content_form.instance.site_name }}</title>
+  <link href="{% static 'assets/img/kiztech-tab-icon.png' %}" rel="icon" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/admin.css' %}" rel="stylesheet">
 </head>
-<body>
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Frontend & Messages Dashboard</h4>
-        <div class="d-flex gap-2">
-            <a href="{% url 'admin:index' %}" class="btn btn-outline-dark btn-sm">Django Admin</a>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
-            </form>
-        </div>
+<body class="dashboard-page">
+  <aside class="dashboard-sidebar" id="dashboard-sidebar">
+    <a class="brand-lockup" href="{% url 'index' %}" aria-label="View {{ content_form.instance.site_name }} website">
+      <img src="{% static 'assets/img/logo.jpeg' %}" alt="{{ content_form.instance.site_name }} logo">
+      <span>{{ content_form.instance.site_name }}</span>
+    </a>
+    <p class="sidebar-label">Workspace</p>
+    <nav class="dashboard-nav" aria-label="Dashboard navigation">
+      <a class="active" href="#overview"><i class="bi bi-grid-1x2"></i>Overview</a>
+      <a href="#content-editor"><i class="bi bi-pencil-square"></i>Site content</a>
+      <a href="#inbox"><i class="bi bi-envelope"></i>Inbox{% if unread_message_count %}<span>{{ unread_message_count }}</span>{% endif %}</a>
+    </nav>
+    <p class="sidebar-label">Manage site</p>
+    <nav class="dashboard-nav dashboard-nav-compact" aria-label="Site management">
+      <a href="{% url 'admin:portfolio_sociallink_changelist' %}"><i class="bi bi-share"></i>Social links</a>
+      <a href="{% url 'admin:portfolio_portfolioitem_changelist' %}"><i class="bi bi-images"></i>Portfolio</a>
+      <a href="{% url 'admin:portfolio_serviceitem_changelist' %}"><i class="bi bi-layers"></i>Services</a>
+      <a href="{% url 'admin:portfolio_testimonial_changelist' %}"><i class="bi bi-chat-quote"></i>Testimonials</a>
+      <a href="{% url 'admin:index' %}"><i class="bi bi-box-arrow-up-right"></i>All admin tools</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="{% url 'index' %}" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right-circle"></i>View website</a>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit"><i class="bi bi-box-arrow-right"></i>Sign out</button></form>
     </div>
+  </aside>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+  <div class="dashboard-shell">
+    <header class="dashboard-topbar">
+      <button class="sidebar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobile-sidebar" aria-label="Open dashboard navigation"><i class="bi bi-list"></i></button>
+      <div><p class="eyebrow">Content workspace</p><h1>Good to see you, {{ request.user.get_username }}</h1></div>
+      <a class="view-site-button" href="{% url 'index' %}" target="_blank" rel="noopener"><span>View site</span><i class="bi bi-arrow-up-right"></i></a>
+    </header>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small">Total Messages</div>
-                        <h3 class="mb-0">{{ message_count }}</h3>
-                    </div>
-                    <i class="bi bi-chat-left-text fs-3"></i>
-                </div>
-            </div>
+    <main class="dashboard-main">
+      {% if messages %}<div class="dashboard-alerts" aria-live="polite">{% for message in messages %}<div class="dashboard-alert {{ message.tags|default:'info' }}"><i class="bi bi-check2-circle"></i>{{ message }}</div>{% endfor %}</div>{% endif %}
+      <section id="overview" class="overview-section">
+        <div class="section-intro"><div><p class="eyebrow">At a glance</p><h2>Website pulse</h2></div><p>Keep the public site up to date and respond to new enquiries from one focused workspace.</p></div>
+        <div class="stats-grid">
+          <article class="stat-card stat-card-primary"><div class="stat-icon"><i class="bi bi-envelope-paper"></i></div><div><span>Total messages</span><strong>{{ message_count }}</strong><small>All enquiries received</small></div></article>
+          <article class="stat-card"><div class="stat-icon"><i class="bi bi-envelope-exclamation"></i></div><div><span>Unread messages</span><strong>{{ unread_message_count }}</strong><small>Need your attention</small></div></article>
+          <article class="stat-card"><div class="stat-icon"><i class="bi bi-calendar3"></i></div><div><span>Messages today</span><strong>{{ today_message_count }}</strong><small>Received since midnight</small></div></article>
         </div>
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small">Messages Today</div>
-                        <h3 class="mb-0">{{ today_message_count }}</h3>
-                    </div>
-                    <i class="bi bi-calendar-check fs-3"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+      </section>
 
-    <div class="row g-4">
-        <div class="col-lg-3">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0">Section Menu (Django Admin)</h6>
+      <div class="dashboard-grid">
+        <section class="dashboard-panel content-panel" id="content-editor">
+          <div class="panel-heading"><div><p class="eyebrow">Edit the website</p><h2>Site content</h2><p>Changes are saved to your live content record.</p></div><i class="bi bi-pencil-square panel-heading-icon"></i></div>
+          <form method="post" action="{% url 'portfolio_admin' %}" enctype="multipart/form-data">
+            {% csrf_token %}<input type="hidden" name="action" value="save_content">
+            <div class="accordion content-accordion" id="content-accordion">
+              {% for section in content_form_sections %}
+                <div class="accordion-item">
+                  <h3 class="accordion-header" id="heading-{{ forloop.counter }}"><button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#section-{{ forloop.counter }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="section-{{ forloop.counter }}"><span class="accordion-number">0{{ forloop.counter }}</span><span><strong>{{ section.title }}</strong><small>{{ section.description }}</small></span></button></h3>
+                  <div id="section-{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#content-accordion"><div class="accordion-body"><div class="field-grid">
+                    {% for field in section.fields %}
+                      <div class="form-field {% if field.field.widget.input_type == 'file' or field.field.widget.input_type == 'textarea' %}form-field-wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>
+                    {% endfor %}
+                  </div></div></div>
                 </div>
-                <div class="card-body d-grid gap-2">
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/sitecontent/">Site Content</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/sociallink/">Social Links</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/aboutstat/">About Stats</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/aboutdetail/">About Details</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/counterstat/">Counter Stats</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/skillcategory/">Skill Categories</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/skill/">Skills</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumeexperience/">Resume Experience</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumeeducation/">Resume Education</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/resumecertification/">Resume Certifications</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/portfoliocategory/">Portfolio Categories</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/portfolioitem/">Portfolio Items</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/serviceitem/">Services</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/admin/portfolio/testimonial/">Testimonials</a>
-                </div>
+              {% endfor %}
             </div>
-        </div>
+            <div class="save-bar"><p><i class="bi bi-info-circle"></i> Images are uploaded when you save.</p><button class="save-button" type="submit"><i class="bi bi-check2"></i>Save site changes</button></div>
+          </form>
+        </section>
 
-        <div class="col-lg-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0">Quick Edit: Site Content</h6>
-                </div>
-                <div class="card-body" style="max-height: 70vh; overflow-y: auto;">
-                    <form method="post" action="{% url 'portfolio_admin' %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="save_content">
+        <section class="dashboard-panel inbox-panel" id="inbox">
+          <div class="panel-heading"><div><p class="eyebrow">Visitor enquiries</p><h2>Inbox</h2><p>{{ unread_message_count }} unread of {{ message_count }} total messages.</p></div><span class="message-count">{{ message_count }}</span></div>
+          <div class="message-list">
+            {% for msg in contact_messages %}
+              <article class="message-card {% if not msg.is_read %}unread{% endif %}">
+                <div class="message-card-header"><div class="message-avatar">{{ msg.name|first|upper }}</div><div class="message-sender"><strong>{{ msg.name }}</strong><a href="mailto:{{ msg.email }}">{{ msg.email }}</a></div><time datetime="{{ msg.created_at|date:'c' }}">{{ msg.created_at|date:"M d" }}</time></div>
+                <h3>{{ msg.subject }}</h3><p>{{ msg.message|truncatechars:120 }}</p>
+                <div class="message-actions"><button type="button" class="message-action primary" data-bs-toggle="modal" data-bs-target="#messageModal{{ msg.id }}"><i class="bi bi-eye"></i>Read</button>{% if not msg.is_read %}<form method="post" action="{% url 'mark_message_read' msg.id %}">{% csrf_token %}<button type="submit" class="message-action"><i class="bi bi-check2"></i>Mark as read</button></form>{% endif %}<form method="post" action="{% url 'delete_message' msg.id %}" onsubmit="return confirm('Delete this message?');">{% csrf_token %}<button type="submit" class="message-action danger" aria-label="Delete message from {{ msg.name }}"><i class="bi bi-trash3"></i></button></form></div>
+              </article>
+            {% empty %}
+              <div class="empty-inbox"><i class="bi bi-inbox"></i><h3>Your inbox is clear</h3><p>New contact-form messages will appear here.</p></div>
+            {% endfor %}
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
 
-                        {% for field in content_form %}
-                            <div class="mb-3">
-                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                {{ field }}
-                                {% if field.help_text %}
-                                    <small class="text-muted d-block">{{ field.help_text }}</small>
-                                {% endif %}
-                                {% for error in field.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
+  <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobile-sidebar" aria-labelledby="mobile-sidebar-label">
+    <div class="offcanvas-header"><span id="mobile-sidebar-label">{{ content_form.instance.site_name }}</span><button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button></div>
+    <div class="offcanvas-body"><nav class="dashboard-nav"><a href="#overview" data-bs-dismiss="offcanvas"><i class="bi bi-grid-1x2"></i>Overview</a><a href="#content-editor" data-bs-dismiss="offcanvas"><i class="bi bi-pencil-square"></i>Site content</a><a href="#inbox" data-bs-dismiss="offcanvas"><i class="bi bi-envelope"></i>Inbox</a><a href="{% url 'admin:index' %}"><i class="bi bi-box-arrow-up-right"></i>All admin tools</a></nav></div>
+  </div>
 
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Sent Messages</h6>
-                    <span class="badge text-bg-dark">{{ message_count }}</span>
-                </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for msg in contact_messages %}
-                            <tr>
-                                <td>
-                                    {{ msg.name }}
-                                    <div class="small text-muted">{{ msg.email }}</div>
-                                </td>
-                                <td>
-                                    <strong>{{ msg.subject }}</strong>
-                                    <div class="small text-muted">{{ msg.message|truncatechars:50 }}</div>
-                                </td>
-                                <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
-                                <td class="d-flex gap-1">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#messageModal{{ msg.id }}">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <form method="post" action="{% url 'delete_message' msg.id %}" onsubmit="return confirm('Delete this message?');">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">No messages yet.</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% for msg in contact_messages %}
-<div class="modal fade" id="messageModal{{ msg.id }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Message from {{ msg.name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-2"><strong>Name:</strong> {{ msg.name }}</div>
-                <div class="mb-2"><strong>Email:</strong> {{ msg.email }}</div>
-                <div class="mb-2"><strong>Subject:</strong> {{ msg.subject }}</div>
-                <div class="mb-2"><strong>Date:</strong> {{ msg.created_at|date:"M d, Y H:i" }}</div>
-                <hr>
-                <p class="mb-0" style="white-space: pre-wrap;">{{ msg.message }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-
-<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  {% for msg in contact_messages %}
+    <div class="modal fade message-modal" id="messageModal{{ msg.id }}" tabindex="-1" aria-labelledby="messageModalLabel{{ msg.id }}" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
+      <div class="modal-header"><div><p class="eyebrow">Message from {{ msg.name }}</p><h2 class="modal-title" id="messageModalLabel{{ msg.id }}">{{ msg.subject }}</h2></div><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="modal-body"><div class="message-meta"><span><i class="bi bi-person"></i>{{ msg.name }}</span><a href="mailto:{{ msg.email }}"><i class="bi bi-envelope"></i>{{ msg.email }}</a><span><i class="bi bi-clock"></i>{{ msg.created_at|date:"M d, Y · H:i" }}</span></div><p class="message-full-text">{{ msg.message }}</p></div>
+      <div class="modal-footer"><a class="reply-button" href="mailto:{{ msg.email }}?subject=Re: {{ msg.subject|urlencode }}"><i class="bi bi-reply"></i>Reply by email</a><button type="button" class="message-action" data-bs-dismiss="modal">Close</button></div>
+    </div></div></div>
+  {% endfor %}
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
